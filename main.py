@@ -1,46 +1,23 @@
-import random
+from random import randint
 
 
-class GuessNumberGame:
+class EngineGame:
     def __init__(self):
         self.min_num = 1
-        self.easy_level = 10
-        self.medium_level = 20
+        self.max_num = self.select_level_difficulties()
+        self.get_random_num = randint(self.min_num, self.max_num)
+        self.play()
 
-
-    # метод начала игры
-    def play(self):
-        input_level = int(input("Выберите уровень сложности игры, где 1-easy, 2 - medium :"))
-        level_game = self.select_level_difficulties(input_level)
-        random_num = self.get_random_num(level_game)
-
-        print(f"Угадай число в диапазоне от {self.min_num } до {level_game}")
-
-        # игровая механика
+    def select_level_difficulties(self):
         while True:
             try:
-                guess = int(input("Введи число: "))
+                maxNum = int(input("Введи максимальное число диапазона:"))
             except ValueError:
-                print(' Неверное значение, попробуй снова.')
+                print('Написанно число, а ты что вводишь!!!!!')
                 continue
+            return maxNum
 
-            if self.check_number(random_num, guess):
-                break
-
-
-    def get_random_num(self, level_game):
-        return random.randint(self.min_num, level_game)
-
-
-    def select_level_difficulties(self, input_level):
-        if input_level == 1:
-            select_level = self.easy_level
-        elif input_level == 2:
-            select_level = self.medium_level
-        return select_level
-
-
-    def check_number(self, random_num, guess):
+    def game_check_num(self, random_num, guess):
         if guess == random_num:
             print(f"верное число {random_num}")
             return True
@@ -51,5 +28,23 @@ class GuessNumberGame:
             print("Твое число больше загаданного")
             return False
 
+    def __del__(self):
+        print('Если хочешь еще сыграть, начинай игру!')
 
-GuessNumberGame().play()
+
+    def human_check_num(self, enter_hint):
+        if enter_hint == '=':
+            return True
+        elif enter_hint == '>':
+            self.min_num = int(self.get_random_num) + 1
+            self.get_random_num = randint(self.min_num, self.max_num)
+            return False
+        elif enter_hint == '<':
+            self.max_num = (self.get_random_num) - 1
+            self.get_random_num = randint(self.min_num, self.max_num)
+            return False
+        else:
+            print('Ты можешь выбрать только  < или > или =')
+            return False
+
+
